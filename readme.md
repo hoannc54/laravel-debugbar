@@ -3,68 +3,63 @@
 [![Latest Stable Version](https://poser.pugx.org/barryvdh/laravel-debugbar/version.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 [![Total Downloads](https://poser.pugx.org/barryvdh/laravel-debugbar/d/total.png)](https://packagist.org/packages/barryvdh/laravel-debugbar)
 
-### Note for v3: Debugbar is now enabled by requiring the package, but still needs APP_DEBUG=true by default!
+### Chú ý cho phiên bản 3: Debugbar bây giờ đã được kích hoạt yêu cầu của gói, nhưng vẫn cần APP_DEBUG=true theo mặc định!
+### Cho Laravel < 5.5, Vui lòng dùng [2.4 branch](https://github.com/barryvdh/laravel-debugbar/tree/2.4)!
 
-### For Laravel < 5.5, please use the [2.4 branch](https://github.com/barryvdh/laravel-debugbar/tree/2.4)!
-
-This is a package to integrate [PHP Debug Bar](http://phpdebugbar.com/) with Laravel 5.
-It includes a ServiceProvider to register the debugbar and attach it to the output. You can publish assets and configure it through Laravel.
-It bootstraps some Collectors to work with Laravel and implements a couple custom DataCollectors, specific for Laravel.
-It is configured to display Redirects and (jQuery) Ajax Requests. (Shown in a dropdown)
-Read [the documentation](http://phpdebugbar.com/docs/) for more configuration options.
+Đây là gói để tích hợp [PHP Debug Bar](http://phpdebugbar.com/) với Laravel 5. Nó bao gồm một ServiceProvider để đăng ký debugbar và đính kèm nó cho đầu ra. Bạn có thể đẩy tài nguyên và cấu hình nó thông qua Laravel. Nó khởi động vài Collectors để làm việc với Laravel và thực hiện một cặp tuỳ biến Collectors, đặc biệt cho Laravel. Nó đã được cấu hình để hiển thị các chuyển hướng và (jQuery) Ajax Requests. (Hiển thị trong một danh sách thả xuống).Đọc [Tài liệu](http://phpdebugbar.com/docs/) để biết thêm nhiều tuỳ chọn cấu hình.
 
 ![Screenshot](https://cloud.githubusercontent.com/assets/973269/4270452/740c8c8c-3ccb-11e4-8d9a-5a9e64f19351.png)
 
-Note: Use the DebugBar only in development. It can slow the application down (because it has to gather data). So when experiencing slowness, try disabling some of the collectors.
+Chú ý: Dùng DebugBar chỉ trong môi trường phát triển. Nó có thểm làm chậm ứng dụng tải xuống (bởi vì nó phải thu thập dữ liệu). Bởi vậy khi trải nghiệm chậm hơn, thử tắt một vài collectors.
 
-This package includes some custom collectors:
- - QueryCollector: Show all queries, including binding + timing
- - RouteCollector: Show information about the current Route.
- - ViewCollector: Show the currently loaded views. (Optionally: display the shared data)
- - EventsCollector: Show all events
- - LaravelCollector: Show the Laravel version and Environment. (disabled by default)
- - SymfonyRequestCollector: replaces the RequestCollector with more information about the request/response
- - LogsCollector: Show the latest log entries from the storage logs. (disabled by default)
- - FilesCollector: Show the files that are included/required by PHP. (disabled by default)
- - ConfigCollector: Display the values from the config files. (disabled by default)
- - CacheCollector: Display all cache events. (disabled by default)
+Gói này bao gồm một số collectors tuỳ biến:
+ - QueryCollector: Hiển thị tất cả truy vấn, bao gồm các ràng buộc và thời gian.
+ - RouteCollector: Hiện thị thông tin về Route hiện tại.
+ - ViewCollector: Hiển thị views được tải hiện tại. (Tuỳ chọn: hiển thị dữ liệu được chia sẻ)
+ - EventsCollector: Hiển thị tất cả sự kiện.
+ - LaravelCollector: Hiển thị phiên bản và môi trường Laravel (Mặc định là tắt)
+ - SymfonyRequestCollector: thay thế RequestCollector với thông tin về request/response
+ - LogsCollector: Hiển thị log mới nhập từ thư mục lưu trữ logs. (Mặc định là tắt)
+ - FilesCollector: Hiển thị các file được include hoặc require trong PHP(mặc định là tắt)
+ - ConfigCollector: Hiển thị các giá trị trong file cấu hình. (Mặc định là tắt)
+ - CacheCollector: Hiển thị tất cả sự kiện cache. (mặc định là tắt)
 
-Bootstraps the following collectors for Laravel:
- - LogCollector: Show all Log messages
+Khởi động các collector sau cho Laravel:
+ - LogCollector: Hiện thị tất cả bản tin log.
  - SwiftMailCollector and SwiftLogCollector for Mail
 
-And the default collectors:
+Và các collector mặc định:
  - PhpInfoCollector
  - MessagesCollector
  - TimeDataCollector (With Booting and Application timing)
  - MemoryCollector
  - ExceptionsCollector
 
-It also provides a Facade interface for easy logging Messages, Exceptions and Time
+Nó cũng cung cấp một Facade interface để dễ dàng ghi lại Messages, Exceptions and Time
 
-## Installation
+## Cài đặt
 
-Require this package with composer. It is recommended to only require the package for development.
+Yêu cầu gói thông qua composer. Nó được chỉ được đề nghị gói cho môi trường phát triển.
 
 ```shell
 composer require barryvdh/laravel-debugbar --dev
 ```
 
-Laravel 5.5 uses Package Auto-Discovery, so doesn't require you to manually add the ServiceProvider.
+Laravel 5.5 sử dụng Package Auto-Discovery, nên không yêu cầu bạn thêm bằng tay ServiceProvider.
 
-The Debugbar will be enabled when `APP_DEBUG` is `true`.
+Debugbar sẽ được bật khi `APP_DEBUG` là `true`.
 
 > If you use a catch-all/fallback route, make sure you load the Debugbar ServiceProvider before your own App ServiceProviders.
 
 ### Laravel 5.5+:
 
-If you don't use auto-discovery, add the ServiceProvider to the providers array in config/app.php
+Nếu bạn không dùng auto-discovery, thì thêm ServiceProvider để cung cấp cho mảng trong config/app.php
 
 ```php
 Barryvdh\Debugbar\ServiceProvider::class,
 ```
 
-If you want to use the facade to log messages, add this to your facades in app.php:
+Nếu bạn muốn dùng facade để ghi messages, thêm nó vào facade của bạn trong app.php:
 
 ```php
 'Debugbar' => Barryvdh\Debugbar\Facade::class,
